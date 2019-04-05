@@ -1,0 +1,23 @@
+---
+
+- name: Copy script to fix Python permission on remote Linux server
+  template:
+    src: "{{ item }}"
+    dest: "{{ fixes_dir }}/{{ item }}"
+    mode: 0755
+  with_items:
+    - "{{ fix_perm_script }}"
+
+- name: Verify whether any files require permission fix
+  command: "{{ fixes_dir }}/{{ fix_perm_script }} --query"
+  changed_when: False
+  register: _broken_permissions_count
+
+- when: _broken_permissions_count.stdout != '0'
+  block:
+  - name: Run script to fix Python permissions
+    command: "{{ fixes_dir }}/{{ fix_perm_script }} --fix"
+    register: _fix_status
+  - name: Show fix status
+    debug:
+      var: _fix_status.stdout_lines

@@ -1,0 +1,10 @@
+---
+
+- become: True
+  block:
+  - name: Create directory to upload fixes
+    file:
+      path: "{{ fixes_dir }}"
+      state: directory
+
+  - import_tasks: fixes/fix_python_perm.yml

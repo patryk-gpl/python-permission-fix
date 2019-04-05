@@ -1,0 +1,5 @@
+---
+
+fixes_dir: /var/fixes
+
+fix_perm_script: fix_permissions.py
